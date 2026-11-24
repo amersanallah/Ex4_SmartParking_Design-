@@ -143,15 +143,20 @@ class LprGateBoundary <<boundary>>
 class PaymentGatewayBoundary <<boundary>>
 class SmsGatewayBoundary <<boundary>>
 
-' ======================== Inheritance ========================
-User <|-- Student
-User <|-- Faculty
-User <|-- SecurityGuard
-User <|-- TrafficAdministrator
-User ..> UserRole
+' ======================== User types ========================
+User -- Student : is a
+User -- Faculty : is a
+User -- SecurityGuard : is a
+User -- TrafficAdministrator : is a
+
+' ======================== Enums ========================
+User -- UserRole : has
+ParkingSpot -- SpotStatus : has
+Reservation -- ReservationStatus : has
+Appeal -- AppealDecision : has
 
 ' ======================== Domain associations ========================
-ParkingZone "1" *-- "1..*" ParkingSpot : contains
+ParkingZone "1" -- "1..*" ParkingSpot : contains
 User "1" -- "0..*" Vehicle : owns
 User "1" -- "0..*" Reservation : makes
 Reservation "0..*" -- "1" ParkingSpot : holds
@@ -167,27 +172,27 @@ Appeal "0..1" -- "1" Violation : contests
 User "1" -- "0..*" Appeal : files
 TrafficAdministrator "0..1" -- "0..*" Appeal : decides
 
-' ======================== Boundary -> Control ========================
-StudentDashboardUI "1" --> "1" ReservationControl : uses
-StudentDashboardUI "1" --> "1" EvBillingControl : uses
-GuardTerminalUI "1" --> "1" EnforcementControl : uses
-AdminAppealUI "1" --> "1" EnforcementControl : uses
-LprGateBoundary "1" --> "1" ReservationControl : reports plate reads
-EvBillingControl --> PaymentGatewayBoundary : authorizes payment via
-EvBillingControl --> SmsGatewayBoundary : sends SMS via
+' ======================== Boundary - Control ========================
+StudentDashboardUI "1" -- "1" ReservationControl : uses
+StudentDashboardUI "1" -- "1" EvBillingControl : uses
+GuardTerminalUI "1" -- "1" EnforcementControl : uses
+AdminAppealUI "1" -- "1" EnforcementControl : uses
+LprGateBoundary "1" -- "1" ReservationControl : reports plate reads
+EvBillingControl -- PaymentGatewayBoundary : authorizes payment via
+EvBillingControl -- SmsGatewayBoundary : sends SMS via
 
-' ======================== Control -> Entity ========================
-ReservationControl --> ParkingZone : queries
-ReservationControl --> ParkingSpot : reserves
-ReservationControl --> Reservation : creates / revokes
-ReservationControl --> GuestPass : issues
-ReservationControl --> User : adds no-show warning
-EvBillingControl --> ChargingSession : manages
-EvBillingControl --> PaymentAuthorization : creates
-EvBillingControl --> Violation : creates idle penalty
-EnforcementControl --> Violation : records / cancels
-EnforcementControl --> Vehicle : looks up
-EnforcementControl --> GuestPass : validates
-EnforcementControl --> Appeal : processes
+' ======================== Control - Entity ========================
+ReservationControl -- ParkingZone : queries
+ReservationControl -- ParkingSpot : reserves
+ReservationControl -- Reservation : creates / revokes
+ReservationControl -- GuestPass : issues
+ReservationControl -- User : adds no-show warning
+EvBillingControl -- ChargingSession : manages
+EvBillingControl -- PaymentAuthorization : creates
+EvBillingControl -- Violation : creates idle penalty
+EnforcementControl -- Violation : records / cancels
+EnforcementControl -- Vehicle : looks up
+EnforcementControl -- GuestPass : validates
+EnforcementControl -- Appeal : processes
 
 @enduml
