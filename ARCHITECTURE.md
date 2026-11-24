@@ -10,11 +10,12 @@
 
 | Role | Full Name | Student ID | Braude Academic Email |
 | :--- | :--- | :--- | :--- |
-| **Student A (Role A)** | `[Enter Student A Full Name]` | `[Enter ID]` | `[studentA@e.braude.ac.il]` |
-| **Student B (Role B)** | `[Enter Student B Full Name]` | `[Enter ID]` | `[studentB@e.braude.ac.il]` |
+| **Student A (Role A)** | `gaith mostafa` | `327910717` | `gaithmostafa@e.braude.ac.il` |
+| **Student B (Role B)** | `amir sanallah` | `212716773` | `amir.sanallah@e.braude.ac.il` |
+| **Student c (Role )** | `kosia` | `318487529` | `kosia.habaiallah@e.braude.ac.il` |
 
 * **Group Number:** `G[XX]`
-* **GitHub Repository URL:** `https://github.com/[Username]/Ex4_SmartParking_Design`
+* **GitHub Repository URL:** `https://github.com/amersanallah/Ex4_SmartParking_Design-.git`
 
 ---
 
@@ -62,7 +63,28 @@ Following the **ECB (Entity-Control-Boundary)** architectural pattern:
 ## 5. Independent AI Prompt & Architectural Design Critique (Part 4)
 
 ```text
-[Paste your team's verbatim English Design Review prompt from Part 4 here]
+You are reviewing my UML models for a university Software Engineering course.
+Using SYSTEM_STORY.md as the only source of truth, audit class_diagram_ecb.puml
+and sequence_reservation_ecb.puml against the two edge cases in Section 3:
+
+Edge Case A – Double-Booking Race Condition:
+Two students click "Reserve" on the last available spot in the Student Zone
+at the exact same millisecond.
+- Does ParkingSpot correctly model the version attribute and tryReserve(expectedVersion)?
+- Does the sequence diagram show that only one reservation succeeds and the
+  other user receives an error, with no Reservation object created for the loser?
+
+Edge Case B – Physical vs. Electrical EV State:
+An EV driver unplugs the cable at minute 29 but leaves the car in the EV bay.
+- Does ChargingSession keep isPluggedIn and isPhysicallyOccupied as separate attributes?
+- Is the idle penalty decided by physical occupancy and not by cable state,
+  so the penalty is still applied after minute 30?
+
+For each edge case, answer: Covered / Partially covered / Not covered,
+explain why, and list concrete fixes (attribute, method, message or guard).
+Also suggest any other improvements that keep the diagrams consistent with
+each other and with ECB rules (Boundary talks only to Control).
+Do not rewrite the diagrams – give me a list of findings only.
 ```
 
 * **Improvement 1 Applied (Race Condition):** Added `version: int` and `tryReserve(expectedVersion: int): boolean` on `ParkingSpot` (and nested `alt acquired == true/false` in Sequence Diagram 1) to prevent simultaneous double-booking.
